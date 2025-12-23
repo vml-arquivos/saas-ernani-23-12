@@ -3,6 +3,7 @@ import { publicProcedure, router } from "./_core/trpc";
 import { calculatePrice, calculateSac } from "./utils/finance";
 import { getDb } from "./db";
 import { leads } from "../drizzle/schema";
+import { notifyOwner } from "./_core/notification";
 
 // Schema de entrada para o cálculo
 const calculationInputSchema = z.object({
@@ -65,6 +66,29 @@ export const financeRouter = router({
         downPaymentValue,
         // Outros campos do lead podem ser preenchidos com defaults ou nulos
       });
+
+      // Notificação por E-mail ao Corretor
+      const title = `NOVO LEAD - Simulação de Financiamento de Luxo`;
+      const content = `
+        Um novo lead de simulação foi capturado:
+        
+        Nome: ${name}
+        Email: ${email}
+        WhatsApp: ${whatsapp}
+        
+        Valor do Imóvel: R$ ${(propertyValue / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+        Valor da Entrada: R$ ${(downPaymentValue / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+        Valor Financiado: R$ ${(financedAmount / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+        
+        Tipo de Cálculo: ${calculationType}
+        Primeira Parcela Estimada: R$ ${(result.firstInstallment / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+        Total de Juros Estimado: R$ ${(result.totalInterest / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+        
+        Acesse o Dashboard para mais detalhes e acompanhamento.
+      `;
+
+      // Envia a notificação, mas não impede o retorno da simulação em caso de falha
+      notifyOwner({ title, content }).catch(console.error);
 
       return {
         ...result,

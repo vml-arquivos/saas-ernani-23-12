@@ -144,6 +144,39 @@ export default function LeadEdit() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-8">
+              {/* Card de Dados de Simulação */}
+              {lead && lead.source === "simulador" && (
+                <Card className="bg-yellow-50 border-yellow-200">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-yellow-800">
+                      Dados da Simulação de Financiamento
+                    </CardTitle>
+                    <CardDescription className="text-yellow-700">
+                      Lead capturado via Simulador. Utilize estes dados para qualificação.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Valor do Imóvel Desejado</p>
+                      <p className="text-lg font-bold text-yellow-900">
+                        {lead.propertyValue ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(lead.propertyValue / 100) : 'Não Informado'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Valor da Entrada Estimada</p>
+                      <p className="text-lg font-bold text-yellow-900">
+                        {lead.downPaymentValue ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(lead.downPaymentValue / 100) : 'Não Informado'}
+                      </p>
+                    </div>
+                    <div className="col-span-2">
+                      <p className="text-sm font-medium text-gray-600">Capacidade de Pagamento (Perfil)</p>
+                      <p className="text-base text-yellow-900">
+                        O cliente demonstrou interesse em um imóvel de **{lead.propertyValue ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(lead.propertyValue / 100) : 'Valor Não Informado'}** com uma entrada de **{lead.downPaymentValue ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(lead.downPaymentValue / 100) : 'Valor Não Informado'}**. Isso indica uma capacidade de financiamento de **{lead.propertyValue && lead.downPaymentValue ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((lead.propertyValue - lead.downPaymentValue) / 100) : 'Não Calculável'}**.
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
               {/* Sugestões Inteligentes */}
               {lead && (
                 <Card className="bg-blue-50 border-blue-200">
