@@ -8,6 +8,7 @@ import { getDb } from "./db";
 import { eq, desc } from "drizzle-orm";
 import { analyticsEvents, campaignSources, transactions, commissions, reviews } from "../drizzle/schema";
 import { financeRouter } from "./finance.router";
+import { marketRouter } from "./market.router";
 
 // ============================================
 // AUTH ROUTER
@@ -1527,6 +1528,7 @@ export const appRouter = router({
   analytics: analyticsRouter,
   financial: financialRouter,
   finance: financeRouter,
+  market: marketRouter,
   reviews: reviewsRouter,
 });
 

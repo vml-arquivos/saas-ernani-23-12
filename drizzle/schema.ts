@@ -726,3 +726,40 @@ export type InsertTask = typeof tasks.$inferInsert;
 
 
 
+
+
+// ============================================
+// TABELA DE PERFIS DE BUSCA (ALERTA INTELIGENTE)
+// ============================================
+
+export const searchProfiles = pgTable("search_profiles", {
+  id: int("id").generatedAlwaysAsIdentity().primaryKey(),
+  
+  leadId: int("leadId").notNull(), // Referência ao lead
+  
+  // Critérios de busca
+  budgetMin: int("budgetMin"), // em centavos
+  budgetMax: int("budgetMax"), // em centavos
+  bedroomsMin: int("bedroomsMin"),
+  bedroomsMax: int("bedroomsMax"),
+  bathroomsMin: int("bathroomsMin"),
+  bathroomsMax: int("bathroomsMax"),
+  suitesMin: int("suitesMin"),
+  suitesMax: int("suitesMax"),
+  parkingSpacesMin: int("parkingSpacesMin"),
+  parkingSpacesMax: int("parkingSpacesMax"),
+  areaMin: int("areaMin"), // em m²
+  areaMax: int("areaMax"), // em m²
+  city: varchar("city", { length: 100 }),
+  neighborhoods: text("neighborhoods"), // JSON array de bairros
+  propertyTypes: text("propertyTypes"), // JSON array de tipos de imóvel
+  
+  // Status do perfil de busca
+  isActive: boolean("isActive").default(true).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+
+export type SearchProfile = typeof searchProfiles.$inferSelect;
+export type InsertSearchProfile = typeof searchProfiles.$inferInsert;
